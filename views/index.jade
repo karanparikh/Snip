@@ -1,0 +1,12 @@
+!!! 5
+html
+    head
+        title Snip
+    body
+        form(method="post", action="/add")
+            textarea(name="code", rows="25", cols="80")
+            br
+            select(name="language")
+                - each opt, val in items 
+                    option(value="#{val}") #{opt}
+            input(type="submit", value="Paste!")
