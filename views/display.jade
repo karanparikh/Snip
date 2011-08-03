@@ -3,9 +3,17 @@ html
     head      
         script(type="text/javascript", src="../sh/scripts/shCore.js")
         script(type="text/javascript", src="../sh/scripts/shBrushJScript.js")
+        script(type="text/javascript", src="../sh/scripts/shBrushCpp.js")
+        script(type="text/javascript", src="../sh/scripts/shBrushJava.js")
+        script(type="text/javascript", src="../sh/scripts/shBrushPerl.js")
+        script(type="text/javascript", src="../sh/scripts/shBrushPhp.js")
+        script(type="text/javascript", src="../sh/scripts/shBrushPython.js")
+        script(type="text/javascript", src="../sh/scripts/shBrushRuby.js")
     body
         link(href="../sh/styles/shCore.css", rel="stylesheet", type="text/css")
         link(href="../sh/styles/shThemeDefault.css", rel="stylesheet", type="text/css")
+        pre(class="brush: #{language}")
+            #{code}
         //content here
         script(type="text/javascript")
             SyntaxHighlighter.all();

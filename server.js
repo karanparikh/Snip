@@ -8,10 +8,12 @@ app.set('view options', {
     layout: false
 });
 app.use(express.bodyParser());
+app.use(express.static(__dirname + '/'));
 
 var language_map = {
     'cpp': "C++",
     'java': "Java",
+    'js': "Javascript",
     'perl': "Perl",
     'php': "PHP",
     'python': "Python",
@@ -52,12 +54,17 @@ app.get(/\/(\d+)/, function(req, res){
                 //TODO render 404 / internal server error
                 return;
             }
-            //to capitalize the first letter of a string s
-            //s = s[0] + s.slice(1)
+
             var obj = JSON.parse(data.toString());
             var code = obj.code;
             var language = obj.language;
+
+            //replace the '<' and '>' from the code for the sytax highlighter
+            code = code.replace(/\</g, "&lt;");
+            code = code.replace(/\>/g, "&gt;");
+
             r.quit();
+
             res.render('display', {code: code, language: language});
         });
     });
