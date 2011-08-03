@@ -7,8 +7,9 @@ app.set('view engine', 'jade');
 app.set('view options', {
     layout: false
 });
+app.use(app.router);
 app.use(express.bodyParser());
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/sh'));
 
 var language_map = {
     'cpp': "C++",
@@ -51,7 +52,8 @@ app.get(/\/(\d+)/, function(req, res){
     r.on('connect', function(){
         r.get('snippet:' + id, function(err, data){
             if(!data){
-                //TODO render 404 / internal server error
+                r.quit();
+                res.render('404');
                 return;
             }
 
