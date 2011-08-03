@@ -52,6 +52,8 @@ app.get(/\/(\d+)/, function(req, res){
                 //TODO render 404 / internal server error
                 return;
             }
+            //to capitalize the first letter of a string s
+            //s = s[0] + s.slice(1)
             var obj = JSON.parse(data.toString());
             var code = obj.code;
             var language = obj.language;
