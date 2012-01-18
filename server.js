@@ -34,40 +34,39 @@ app.post('/add', function(req, res){
     var store = {};
     store.code = code;
     store.language = language;
-    var r = redis.createClient();
-    r.on('connect', function(){
-        r.incr("nextid", function(err, id){
-            r.set("snippet:" + id, JSON.stringify(store), function(){
-                r.quit();
-                var url = "/" + id;
-                res.render('add', {url: url});
-            });
+    var redisClient = redis.createClient();
+    redisClient.on('connect', function(){
+        redisClient.incr("nextid", function(err, id){
+            redisClient.hmset("snippet:" + id,
+                {"language": store.language, "code": store.code},
+                function(){
+                    redisClient.quit();
+                    var url = "/" + id;
+                    res.render('add', {url: url});
+                }
+            );
         });
     });
 });
 
 app.get(/\/(\d+)/, function(req, res){
     var id = req.params[0];
-    var r = redis.createClient();
-    r.on('connect', function(){
-        r.get('snippet:' + id, function(err, data){
-            if(!data){
-                r.quit();
+    var redisClient = redis.createClient();
+    redisClient.on('connect', function(){
+        redisClient.hgetall('snippet:' + id, function(err, data){
+            if(!data.code){
+                redisClient.quit();
                 res.render('404');
                 return;
             }
 
-            var obj = JSON.parse(data.toString());
-            var code = obj.code;
-            var language = obj.language;
+            // replace the '<' and '>' from the code for the sytax highlighter
+            data.code = data.code.replace(/\</g, "&lt;");
+            data.code = data.code.replace(/\>/g, "&gt;");
 
-            //replace the '<' and '>' from the code for the sytax highlighter
-            code = code.replace(/\</g, "&lt;");
-            code = code.replace(/\>/g, "&gt;");
+            redisClient.quit();
 
-            r.quit();
-
-            res.render('display', {code: code, language: language});
+            res.render('display', {code: data.code, language: data.language});
         });
     });
 });
