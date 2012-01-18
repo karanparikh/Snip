@@ -7,8 +7,8 @@ app.set('view engine', 'jade');
 app.set('view options', {
     layout: false
 });
-app.use(app.router);
 app.use(express.bodyParser());
+app.use(app.router);
 app.use(express.static(__dirname + '/sh'));
 
 var language_map = {
